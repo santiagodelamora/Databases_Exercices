@@ -53,8 +53,9 @@ postgres:14.22-trixie
 
 ## Contenedor de SQLServer con volumen
 ```bash
-docker run -d --name server-sqlserverdsmg3 \
--p 1433:1433 -e MSSQL_SA_PASSWORD=12345 \
--v vol-sqlserverdsmg3:/var/opt/mssql/data \
-mcr.microsoft.com/mssql/server:2022-latest
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=P@ssw0rd" \
+-u 0 \
+-p 1451:1433 --name SQLServerG1 \
+-d -v v-sqlserverg1:/var/opt/mssql/data \
+d01cc
 ```

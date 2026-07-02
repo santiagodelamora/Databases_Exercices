@@ -26,7 +26,7 @@ Proceso de mapeo de entidades y relaciones hacia tablas físicas.
 Restricciones y acciones en cascada (ON DELETE / ON UPDATE).
 
 #### 3. 🔨 Construcción con SQL-LDD (Lenguaje de Definición de Datos)
-Implementación física de la estructura de la base de datos utilizando código SQL estándar.
+Implementación física de la estructura de la base de datos utilizando código SQL estándar.<br>
 CREATE, ALTER y DROP.
 PRIMARY KEY, FOREIGN KEY, UNIQUE, NOT NULL y CHECK.
 
@@ -52,9 +52,9 @@ FOREIGN KEY (alumno_id) REFERENCES alumnos(alumno_id) ON DELETE CASCADE
 
 #### 5. ⚡ Manipulación con SQL-LMD (Lenguaje de Manipulación de Datos)
 Interacción directa con los datos almacenados para consulta y modificación.
-INSERT, SELECT, UPDATE y DELETE.
-Uso de WHERE, ORDER BY, GROUP BY y HAVING.
-Combinación de tablas mediante INNER JOIN, LEFT JOIN y RIGHT JOIN.
+**INSERT**, **SELECT**, **UPDATE** y **DELETE**.<br>
+Uso de **WHERE*, **ORDER BY**, **GROUP BY** y **HAVING**.<br>
+Combinación de tablas mediante **INNER JOIN**, **LEFT JOIN** y **RIGHT JOIN**.
 
 ```sql
 -- Ejemplo de consulta multitable (LMD)
