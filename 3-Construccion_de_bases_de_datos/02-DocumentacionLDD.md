@@ -96,3 +96,12 @@ La razón es que funciona de forma consistente en **SQLServer, MySQL, MariaDB** 
 | **ck** | Check |
 | **df** | Default |
 | **ix** | Index |
+
+## ALTER TABLE
+Permite modificar una tabla existente<br>
+Puede:
+- Agregar columnas
+- Eliminar columnas
+- Modificar columnas
+- Agregar restricciones
+- Eliminar restricciones

@@ -147,3 +147,125 @@ INSERT INTO categoria(nombre, activo) VALUES ('Carnes frías', DEFAULT);
 INSERT INTO categoria(nombre) VALUES ('Lacteos');
 
 SELECT * FROM categoria;
+
+CREATE DATABASE express_patito;
+GO
+
+USE express_patito;
+GO
+
+-- Primera forma de construcción (no utilizar en el futuro)
+CREATE TABLE producto(
+	producto_id INT NOT NULL IDENTITY(1, 1),
+	nombre VARCHAR(20) NOT NULL UNIQUE,
+	descripcion VARCHAR(80),
+	precio DECIMAL(10, 2) NOT NULL CHECK (precio > 0.0),
+	existencia INT NOT NULL CHECK(existencia > 0 AND existencia <= 100),
+	activo BIT NOT NULL DEFAULT 1,
+	tipo CHAR(1) NOT NULL CHECK(tipo = 'r' OR tipo = 'p')
+);
+GO
+
+INSERT INTO producto VALUES ('pitufo', 'corrientona', 12.50, 30, DEFAULT, 'p');
+INSERT INTO producto VALUES ('Quesadita', 'sabrosona', 12.50, 34, DEFAULT, 'r');
+INSERT INTO producto(nombre, precio, existencia, tipo) VALUES ('Pantera rosa', 89.9, 56, 'p');
+
+DROP TABLE producto;
+
+-- Segunda forma de construcción (Restricción por columna)
+CREATE TABLE producto(
+	producto_id INT NOT NULL IDENTITY(1, 1) CONSTRAINT pk_producto PRIMARY KEY,
+	nombre VARCHAR(20) NOT NULL CONSTRAINT uq_producto_nombre UNIQUE,
+	descripcion VARCHAR(80),
+	precio DECIMAL(10, 2) NOT NULL CONSTRAINT ck_producto_precio CHECK (precio > 0.0),
+	existencia INT NOT NULL CONSTRAINT ck_producto_existencia CHECK(existencia BETWEEN 1 AND 100),
+	activo BIT NOT NULL CONSTRAINT df_producto_activo DEFAULT 1,
+	tipo CHAR(1) NOT NULL CONSTRAINT ck_producto_tipo CHECK(tipo IN ('r', 'p'))
+);
+GO
+
+-- Tercer forma de construccion (definición al final)
+CREATE TABLE producto(
+	producto_id INT NOT NULL IDENTITY(1, 1),
+	nombre VARCHAR(20) NOT NULL,
+	descripcion VARCHAR(80),
+	precio DECIMAL(10, 2) NOT NULL,
+	existencia INT NOT NULL,
+	activo BIT NOT NULL CONSTRAINT df_producto_activo DEFAULT 1,
+	tipo CHAR(1) NOT NULL,
+	CONSTRAINT pk_producto PRIMARY KEY (producto_id),
+	CONSTRAINT uq_producto_nombre UNIQUE (nombre),
+	CONSTRAINT ck_producto_precio CHECK (precio > 0.0),
+	CONSTRAINT ck_producto_existencia CHECK (existencia BETWEEN 1 AND 100),
+	CONSTRAINT ck_producto_tipo CHECK (tipo IN ('r', 'p')),
+);
+GO
+
+SELECT * FROM producto;
+
+-- Restricción de FOREIGN KEY o Integridad Referencial
+CREATE TABLE proveedor(
+	proveedor_id INT NOT NULL IDENTITY(1, 1),
+	empresa VARCHAR(20) NOT NULL,
+	limite_credito NUMERIC(10, 2) NOT NULL,
+	activo BIT NOT NULL CONSTRAINT df_proveedor_activo DEFAULT 1,
+	created_at DATETIME2 NOT NULL CONSTRAINT df_proveedor_created_at DEFAULT SYSDATETIME(),
+	update_at DATETIME2 NOT NULL CONSTRAINT df_proveedor_update_at DEFAULT SYSDATETIME(),
+	CONSTRAINT pk_proveedor PRIMARY KEY (proveedor_id),
+	CONSTRAINT uq_proveedor_empresa UNIQUE (empresa),
+	CONSTRAINT ck_proveedor_limite_credito CHECK (limite_credito BETWEEN 100 AND 50000),
+);
+
+SELECT SYSDATETIME();
+
+CREATE TABLE contacto_proveedor(
+	contacto_id INT IDENTITY(1, 1) CONSTRAINT pk_contacto_proveedor PRIMARY KEY,
+	nombre VARCHAR(30) NOT NULL,
+	apellido_paterno VARCHAR(20) NOT NULL,
+	apellido_materno VARCHAR(20) NULL,
+	telefono VARCHAR(18) NOT NULL,
+	proveedor_id INT NOT NULL
+	CONSTRAINT fk_contacto_proveedor_proveedor FOREIGN KEY (proveedor_id) REFERENCES proveedor(proveedor_id)
+);
+GO
+
+INSERT INTO proveedor(empresa, limite_credito)
+VALUES ('cOCA cOLA', 45000), ('Pepsi', 50000), ('Bimbo', 8000);
+
+SELECT * FROM proveedor;
+
+INSERT INTO contacto_proveedor(nombre, apellido_paterno, apellido_materno, telefono, proveedor_id)
+VALUES ('Luis', 'Aguilar', NULL, '798497988', 2),
+		('Casilda', 'Cabeza de vaca', NULL, '7987953212', 1),
+		('Karen', 'Cabeza', 'Grande', '73314815', 3);
+
+SELECT * FROM contacto_proveedor;
+
+-- Elimina todos los registros de la tabla y reinicia los IDENTITY y que no tenga referencias
+TRUNCATE TABLE contacto_proveedor;
+TRUNCATE TABLE proveedor;
+
+DROP TABLE contacto_proveedor;
+
+-- ON DELETE y ON UPDATE NO ACTION
+CREATE TABLE contacto_proveedor(
+	contacto_id INT IDENTITY(1, 1) CONSTRAINT pk_contacto_proveedor PRIMARY KEY,
+	nombre VARCHAR(30) NOT NULL,
+	apellido_paterno VARCHAR(20) NOT NULL,
+	apellido_materno VARCHAR(20) NULL,
+	telefono VARCHAR(18) NOT NULL,
+	proveedor_id INT NOT NULL
+	CONSTRAINT fk_contacto_proveedor_proveedor FOREIGN KEY (proveedor_id) REFERENCES proveedor(proveedor_id)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION
+);
+GO
+
+INSERT INTO proveedor(empresa, limite_credito)
+VALUES ('cOCA cOLA', 45000), ('Pepsi', 50000), ('Bimbo', 8000);
+INSERT INTO contacto_proveedor(nombre, apellido_paterno, apellido_materno, telefono, proveedor_id)
+VALUES ('Luis', 'Aguilar', NULL, '798497988', 2),
+		('Casilda', 'Cabeza de vaca', NULL, '7987953212', 1),
+		('Karen', 'Cabeza', 'Grande', '73314815', 3);
+
+SELECT * FROM contacto_proveedor;
