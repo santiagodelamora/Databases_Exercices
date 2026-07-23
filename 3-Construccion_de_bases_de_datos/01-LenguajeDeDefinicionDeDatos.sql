@@ -192,7 +192,7 @@ CREATE TABLE producto(
 	precio DECIMAL(10, 2) NOT NULL,
 	existencia INT NOT NULL,
 	activo BIT NOT NULL CONSTRAINT df_producto_activo DEFAULT 1,
-	tipo CHAR(1) NOT NULL,
+	tipo CHAR(1) NOT NULL,	
 	CONSTRAINT pk_producto PRIMARY KEY (producto_id),
 	CONSTRAINT uq_producto_nombre UNIQUE (nombre),
 	CONSTRAINT ck_producto_precio CHECK (precio > 0.0),
