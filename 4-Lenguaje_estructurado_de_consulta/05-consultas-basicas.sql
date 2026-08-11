@@ -2,7 +2,7 @@
 
 SQL-DQL en SQLServer
 
-Archivo: 04-consultas-basicas
+Archivo: 05-consultas-basicas
 
 Descripcion: Introducción a la ejecución de las primeras consultas de recuperación de datos.
 
